@@ -11,6 +11,14 @@ function replaceClassMethodsWithInstanceMethods(code) {
     return code.replace(/^\+ \(/gm, '- (')
 }
 
+function replaceClassMethodCallsWithSelf(code) {
+    let className = classNameFromImplementation(code)
+    let regex = new RegExp('\\[' + className + ' ', 'g')
+    code = code.replace(regex, '[self ')
+
+    return code
+}
+
 function insertCodeAfter(source, insertable, regex) {
     let match = source.match(regex)
 
@@ -58,12 +66,12 @@ function initWithFrameWithOptions(options) {
 
 
     return `- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super init];
+    self = [super initWithFrame:frame];
     if (self) {
 ${variableInit}
     }
 
-    return self
+    return self;
 }`
 
 }
@@ -266,7 +274,9 @@ module.exports.viewWithObject = function(options) {
     interface = replaceClassMethodsWithInstanceMethods(interface)
 
     let implemenation = options.m
+
     implemenation = replaceClassMethodsWithInstanceMethods(implemenation)
+    implemenation = replaceClassMethodCallsWithSelf(implemenation)
 
     let replaceResult = replaceColorsInImplementation(implemenation)
     implemenation = replaceResult.m
@@ -281,7 +291,7 @@ module.exports.viewWithObject = function(options) {
 
     let drawCall = drawRectMethodWithCode(implemenation)
     let sizeCall = sizeThatFitsWithCode(implemenation)
-    // console.log(drawCall);
+    
     implemenation = insertCodeBefore(implemenation, drawCall, /- \(instancetype\)initWithFrame/)
     implemenation = insertCodeBefore(implemenation, sizeCall, /- \(instancetype\)initWithFrame/)
 
