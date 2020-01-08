@@ -206,6 +206,52 @@ function interfacePropertiesWithOptions(options, shouldBePrivate) {
     return code
 }
 
+function drawMethodCallFrom(code) {
+    let regex = /\[[\w]+ draw[\w]+WithFrame:CGRectMake\(\d+,\s+\d+,\s+\d+,\s+\d+\)\s+resizing:[\w]+\]/
+    let match = code.match(regex)
+    return match[0]
+}
+
+function sizeThatFitsWithCode(code) {
+    let methodCall = drawMethodCallFrom(code)
+    let sizeRegex = /CGRectMake\(\d+,\s+\d+,\s+(\d+),\s+(\d+)+\)/
+
+    let width = 100;
+    let height = 100;
+
+    let match = methodCall.match(sizeRegex)
+    if (match.length > 2) {
+        width = parseInt(match[1], 10)
+        height = parseInt(match[2], 10)
+    }
+
+    return `- (CGSize)sizeThatFits:(CGSize)size {
+     CGSize nativeSize = CGSizeMake(${width}, ${height});
+     CGFloat aspect = size.width / nativeSize.width;
+     CGFloat height = nativeSize.height * aspect;
+    
+     return CGSizeMake(size.width, height);
+}`
+
+}
+
+function drawRectMethodWithCode(code) {
+    let methodCall = drawMethodCallFrom(code)
+
+    let method = ''
+    method += '- (void)drawRect:(CGRect)rect {\n'
+    method += '    [super drawRect:rect];\n'
+
+    let sizeRegex = /CGRectMake\(\d+,\s+\d+,\s+\d+,\s+\d+\)/
+    let sizeMatch = methodCall.match(sizeRegex)[0]
+    methodCall = methodCall.replace(sizeMatch, 'rect')
+
+    method += '    ' + methodCall + ';'
+    method += '\n}\n\n'
+
+    return method
+}
+
 
 /**
  * Converts genertated code from static NSObjects to UIViews.
@@ -232,6 +278,12 @@ module.exports.viewWithObject = function(options) {
     let className = classNameFromImplementation(implemenation)
     let classExtension = classExtensionWithOptions(replaceResult, className)
     implemenation = insertCodeBefore(implemenation, classExtension, /@implementation [\w]+\n/)
+
+    let drawCall = drawRectMethodWithCode(implemenation)
+    let sizeCall = sizeThatFitsWithCode(implemenation)
+    // console.log(drawCall);
+    implemenation = insertCodeBefore(implemenation, drawCall, /- \(instancetype\)initWithFrame/)
+    implemenation = insertCodeBefore(implemenation, sizeCall, /- \(instancetype\)initWithFrame/)
 
     let publicProperties = interfacePropertiesWithOptions(replaceResult, false)
     interface = insertCodeAfter(interface, publicProperties, /: UIView\n/)

@@ -55,6 +55,7 @@ describe('objects', function(){
 
     it('should override drawRect')
     it('should remove image drawing code')
+    it('should implement sizeThatFits')
     
 
 })
