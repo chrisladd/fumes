@@ -1,0 +1,23 @@
+{
+  "name": "@cgl2/fumes",
+  "version": "1.0.0",
+  "description": "Fumes removes the code-smell from PaintCode generated drawing.",
+  "main": "convert.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-string": "^1.5.0"
+  },
+  "dependencies": {
+    "args": "^5.0.1",
+    "change-case": "^4.1.1",
+    "match-all": "^1.2.5"
+  }
+}
