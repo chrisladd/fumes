@@ -2,8 +2,10 @@
 const fs = require('fs')
 const camelCase = require('change-case').camelCase
 
-function convertInterfaceToView(interface){
-    interface = interface.replace(/NSObject/g, 'UIView')
+function convertInterfaceToView(interface, className){
+    console.log('convert!')
+    console.log(className)
+    interface = interface.replace(/NSObject/g, className)
     return interface
 }
 
@@ -270,7 +272,14 @@ function drawRectMethodWithCode(code) {
  * @return {string} result.m   Objective-C implementation code
  */
 module.exports.viewWithObject = function(options) {
-    let interface = convertInterfaceToView(options.h)
+    let superClass = 'UIView';
+
+    console.log(options.superClass)
+    if (options.superClass) {
+        superClass = options.superClass;
+    }
+
+    let interface = convertInterfaceToView(options.h, superClass)
     interface = replaceClassMethodsWithInstanceMethods(interface)
 
     let implemenation = options.m
@@ -296,7 +305,9 @@ module.exports.viewWithObject = function(options) {
     implemenation = insertCodeBefore(implemenation, sizeCall, /- \(instancetype\)initWithFrame/)
 
     let publicProperties = interfacePropertiesWithOptions(replaceResult, false)
-    interface = insertCodeAfter(interface, publicProperties, /: UIView\n/)
+
+    let publicPropsRegex = new RegExp(`: ${superClass}\n`)
+    interface = insertCodeAfter(interface, publicProperties, publicPropsRegex)
 
     return {
         h: interface,

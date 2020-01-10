@@ -20,6 +20,16 @@ Input path is necessary, and can include file extensions, or not—`.h` and `.m`
 
 Output path is not necessary—if none is supplied, the input will be overwritten.
 
+## Options
+
+| Option  | Description                                                                                                                                             |  |
+|:--------|:--------------------------------------------------------------------------------------------------------------------------------------------------------|:-|
+| `0`     | The first argument is the input, where content should come from. It should include the name of the file, either `.m`, `.h` or, in the future, `.swift`. |  |
+| `1`     | The second argument is the output, where the modified files should be saved to. If omitted, they will overwrite the input. |
+| `super` | The superclass that should be substituted for `NSObject`. `UIView`, by default, but you may use your own view subclass if you like. This is useful, for example, for instituting class clusters. |
+
+
+
 
 ## Formatting Sketch Files
 

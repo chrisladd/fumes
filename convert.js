@@ -3,10 +3,10 @@
 const fs = require('fs')
 const code_modifier = require('./src/code_modifier')
 const path = require('path')
+let argv = require('minimist')(process.argv.slice(2));
 
-let args = process.argv.slice(2)
-
-function optionsFromArgs(args) {
+function optionsFromArgs(argv) {
+    let args = argv._
     if (args.length == 0) {
         return null;
     }
@@ -19,16 +19,17 @@ function optionsFromArgs(args) {
     let outputPath = inputDir;
     if (args.length > 1) {
         outputPath = args[1]
-    }    
+    } 
 
     return {
         inputDir: inputDir,
         outputDir: outputPath,
-        name: basename
+        name: basename,
+        superClass: argv.super
     }
 }
 
-let options = optionsFromArgs(args)
+let options = optionsFromArgs(argv)
 
 console.log(options)
 
@@ -37,14 +38,13 @@ if (!options.inputDir) {
     process.exit()
 }
 
-
 let h = fs.readFileSync(options.inputDir + '/' + options.name + '.h', 'utf8')
 let m = fs.readFileSync(options.inputDir + '/' + options.name + '.m', 'utf8')
 
-let result = code_modifier.viewWithObject({
-    h: h,
-    m: m
-})
+options.h = h;
+options.m = m;
+
+let result = code_modifier.viewWithObject(options)
 
 let outputDir = options.outputDir
 if (outputDir.lastIndexOf('/') != outputDir.length - 1) {
