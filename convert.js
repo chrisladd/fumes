@@ -31,8 +31,6 @@ function optionsFromArgs(argv) {
 
 let options = optionsFromArgs(argv)
 
-console.log(options)
-
 if (!options.inputDir) {
     console.log('Please supply an input to convert as your first argument')
     process.exit()

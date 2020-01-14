@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Fumes removes the code-smell from PaintCode generated drawing.",
   "main": "convert.js",
+  "bin": {
+    "fumes": "./convert.js"
+  },
   "directories": {
     "test": "test"
   },
