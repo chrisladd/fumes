@@ -13,10 +13,36 @@ public struct SwiftConverterConfig {
 }
 
 public struct SwiftSketchFileConverter {
-    public init() {
+    // MARK: - Public
+    
+    
+    public func convertFileAt(path: String, config: SwiftConverterConfig) -> String? {
+        guard var source = try? String(contentsOfFile: path) else { return nil }
         
+        if let className = classNameFrom(source) {
+            print(className)
+            source = removeClassFunctionsFrom(source, className: className)
+        }
+        
+        source = source.replacingOccurrences(of: ": NSObject {", with: ": \(config.className) {")
+        
+        let colorResult = replaceColorVariables(source)
+        source = insertVariables(source: colorResult.source, variables: colorResult.color)
+        
+        let textResult = replaceTextVariables(source)
+        source = insertVariables(source: textResult.source, variables: textResult.variables)
+        
+        let fontResult = replaceFontVariables(source)
+        source = insertVariables(source: fontResult.source, variables: fontResult.variables)
+        
+        source = insertDrawRectIn(source: source)
+        
+        return source
     }
-
+    
+    
+    // MARK: UIView
+    
     func removeClassFunctionsFrom(_ source: String, className: String) -> String {
         var result = source.replacingOccurrences(of: "class func", with: "func")
         result = result.replacingOccurrences(of: className + ".", with: "")
@@ -39,6 +65,46 @@ public struct SwiftSketchFileConverter {
         return nil
     }
     
+    // MARK: Drawing
+        
+    func insertDrawRectIn(source: String) -> String {
+        var updatedLines = [String]()
+        source.enumerateLines { (line, stop) in
+            
+            if let functionName = self.boundedValueFromString(line, left: "func draw", right: "(frame targetFrame: ") {
+                if let rectValue = self.boundedValueFromString(line, left: "targetFrame: CGRect = ", right: ", resizing") {
+                    
+                    let drawRectCall = """
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        draw\(functionName)(frame: rect)
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        // scale the size to the given width
+         let nativeRect = \(rectValue)
+         let aspect = size.width / nativeRect.width
+         let height = nativeRect.height * aspect
+    
+         return CGSize(width: size.width, height: height)
+    }
+
+                    
+"""
+
+                    updatedLines.append(drawRectCall)
+                }
+            }
+            
+            updatedLines.append(line)
+        }
+        
+        return updatedLines.joined(separator: "\n")
+    }
+
+    
+    // MARK: Groups
+    
     func nameForGroupIn(source: String, before range: Range<String.Index>) -> String? {
         var groupName: String?
         
@@ -53,6 +119,8 @@ public struct SwiftSketchFileConverter {
         
         return groupName
     }
+    
+    // MARK: Colors
     
     func replaceColorVariables(_ source: String) -> (source: String, color: [ColorVariable]) {
         var updatedLines = [String]()
@@ -98,12 +166,7 @@ public struct SwiftSketchFileConverter {
         return (updatedLines.joined(separator: "\n"), namedColors)
     }
     
-    func boundedValueFromString(_ string: String, left: String, right: String) -> String? {
-        guard string.contains(left) else { return nil }
-        let components = string.components(separatedBy: left)
-        guard components.count > 1 else { return nil }
-        return components[1].components(separatedBy: right).first
-    }
+    // MARK: Text
     
     func replaceTextVariables(_ source: String) -> (source: String, variables: [TextVariable]) {
         var stringVariables = [TextVariable]()
@@ -127,6 +190,8 @@ public struct SwiftSketchFileConverter {
         return (updatedLines.joined(separator: "\n"), stringVariables)
     }
     
+    // MARK: Fonts
+    
     func replaceFontVariables(_ source: String) -> (source: String, variables: [FontVariable]) {
         var fontVariables = [FontVariable]()
         var updatedLines = [String]()
@@ -148,7 +213,16 @@ public struct SwiftSketchFileConverter {
         
         return (updatedLines.joined(separator: "\n"), fontVariables)
     }
+
+    // MARK: - Utility
     
+    func boundedValueFromString(_ string: String, left: String, right: String) -> String? {
+        guard string.contains(left) else { return nil }
+        let components = string.components(separatedBy: left)
+        guard components.count > 1 else { return nil }
+        return components[1].components(separatedBy: right).first
+    }
+
     func insertVariables(source: String, variables: [Variable]) -> String {
         var updatedLines = [String]()
         
@@ -166,81 +240,5 @@ public struct SwiftSketchFileConverter {
         return updatedLines.joined(separator: "\n")
     }
     
-    func doubleForMatch(_ match: NSTextCheckingResult, key: String, source: String) -> Double {
-        let range = match.range(withName: key)
-        guard range.location != NSNotFound, let substringRange = Range(range, in:source) else {
-            return 0.0
-        }
-        
-        return Double(String(source[substringRange])) ?? 0.0
-    }
-    
-    func stringForMatch(_ match: NSTextCheckingResult, key: String, source: String) -> String? {
-        let range = match.range(withName: key)
-        guard range.location != NSNotFound, let substringRange = Range(range, in:source) else {
-            return nil
-        }
-        
-        return String(source[substringRange])
-    }
-    
-    func insertDrawRectIn(source: String) -> String {
-        var updatedLines = [String]()
-        source.enumerateLines { (line, stop) in
-            
-            if let functionName = self.boundedValueFromString(line, left: "func draw", right: "(frame targetFrame: ") {
-                if let rectValue = self.boundedValueFromString(line, left: "targetFrame: CGRect = ", right: ", resizing") {
-                    
-                    let drawRectCall = """
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        draw\(functionName)(frame: rect)
-    }
-    
-    override func sizeThatFits(_ size: CGSize) -> CGSize {
-        // scale the size to the given width
-         let nativeRect = \(rectValue)
-         let aspect = size.width / nativeRect.width
-         let height = nativeRect.height * aspect
-    
-         return CGSize(width: size.width, height: height)
-    }
-
-                    
-"""
-
-                    updatedLines.append(drawRectCall)
-                }
-            }
-            
-            updatedLines.append(line)
-        }
-        
-        return updatedLines.joined(separator: "\n")
-    }
-    
-    public func convertFileAt(path: String, config: SwiftConverterConfig) -> String? {
-        guard var source = try? String(contentsOfFile: path) else { return nil }
-        
-        if let className = classNameFrom(source) {
-            print(className)
-            source = removeClassFunctionsFrom(source, className: className)
-        }
-        
-        source = source.replacingOccurrences(of: ": NSObject {", with: ": \(config.className) {")
-        
-        let colorResult = replaceColorVariables(source)
-        source = insertVariables(source: colorResult.source, variables: colorResult.color)
-        
-        let textResult = replaceTextVariables(source)
-        source = insertVariables(source: textResult.source, variables: textResult.variables)
-        
-        let fontResult = replaceFontVariables(source)
-        source = insertVariables(source: fontResult.source, variables: fontResult.variables)
-        
-        source = insertDrawRectIn(source: source)
-        
-        return source
-    }
     
 }
