@@ -16,7 +16,15 @@ public struct SwiftSketchFileConverter {
     // MARK: - Public
     
     
-    public func convertFileAt(path: String, config: SwiftConverterConfig) -> String? {
+    public func convertFile(at path: String, config: SwiftConverterConfig? = nil) -> String? {
+        let internalConfig: SwiftConverterConfig;
+        if let config = config {
+            internalConfig = config
+        }
+        else {
+            internalConfig = SwiftConverterConfig()
+        }
+        
         guard var source = try? String(contentsOfFile: path) else { return nil }
         
         if let className = classNameFrom(source) {
@@ -24,7 +32,7 @@ public struct SwiftSketchFileConverter {
             source = removeClassFunctionsFrom(source, className: className)
         }
         
-        source = source.replacingOccurrences(of: ": NSObject {", with: ": \(config.className) {")
+        source = source.replacingOccurrences(of: ": NSObject {", with: ": \(internalConfig.className) {")
         
         let colorResult = replaceColorVariables(source)
         source = insertVariables(source: colorResult.source, variables: colorResult.color)

@@ -20,7 +20,7 @@ class FumesTests: XCTestCase {
     
     func resultForFixture(_ fixtureName: String) -> String? {
         guard let path = pathForFixture(fixtureName) else { return nil }
-        return converter.convertFileAt(path: path, config: SwiftConverterConfig())
+        return converter.convertFile(at: path)
     }
     
     // MARK: - Tests
