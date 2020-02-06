@@ -70,11 +70,16 @@ class FumesTests: XCTestCase {
     func testFontsAreExtracted() {
         let result = resultForFixture("CircleSquare.swift")!
         
-        print(result)
-        
         XCTAssertTrue(result.contains("var label2Font = UIFont(name: \"Helvetica\", size: 11)!"))
         
         XCTAssertFalse(result.contains("label2.addAttribute(.font, value: UIFont(name: \"Helvetica\", size: 11)!"))
     }
     
+    func testDrawingCodeIsCreated() {
+        let result = resultForFixture("CircleSquare.swift")!
+        
+        XCTAssertTrue(result.contains("override func draw("))
+        XCTAssertTrue(result.contains("drawCircle_square(frame: rect)"))
+        XCTAssertTrue(result.contains("override func sizeThatFits(_ size: CGSize) -> CGSize"))
+    }
 }

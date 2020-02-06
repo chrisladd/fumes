@@ -158,6 +158,59 @@ public struct SwiftSketchFileConverter {
         return updatedLines.joined(separator: "\n")
     }
     
+    func doubleForMatch(_ match: NSTextCheckingResult, key: String, source: String) -> Double {
+        let range = match.range(withName: key)
+        guard range.location != NSNotFound, let substringRange = Range(range, in:source) else {
+            return 0.0
+        }
+        
+        return Double(String(source[substringRange])) ?? 0.0
+    }
+    
+    func stringForMatch(_ match: NSTextCheckingResult, key: String, source: String) -> String? {
+        let range = match.range(withName: key)
+        guard range.location != NSNotFound, let substringRange = Range(range, in:source) else {
+            return nil
+        }
+        
+        return String(source[substringRange])
+    }
+    
+    func insertDrawRectIn(source: String) -> String {
+        var updatedLines = [String]()
+        source.enumerateLines { (line, stop) in
+            
+            if let functionName = self.boundedValueFromString(line, left: "func draw", right: "(frame targetFrame: ") {
+                if let rectValue = self.boundedValueFromString(line, left: "targetFrame: CGRect = ", right: ", resizing") {
+                    
+                    let drawRectCall = """
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        draw\(functionName)(frame: rect)
+    }
+    
+    override func sizeThatFits(_ size: CGSize) -> CGSize {
+        // scale the size to the given width
+         let nativeRect = \(rectValue)
+         let aspect = size.width / nativeRect.width
+         let height = nativeRect.height * aspect
+    
+         return CGSize(width: size.width, height: height)
+    }
+
+                    
+"""
+
+                    updatedLines.append(drawRectCall)
+                }
+            }
+            
+            updatedLines.append(line)
+        }
+        
+        return updatedLines.joined(separator: "\n")
+    }
+    
     public func convertFileAt(path: String, config: SwiftConverterConfig) -> String? {
         guard var source = try? String(contentsOfFile: path) else { return nil }
         
@@ -176,6 +229,8 @@ public struct SwiftSketchFileConverter {
         
         let fontResult = replaceFontVariables(source)
         source = insertVariables(source: fontResult.source, variables: fontResult.variables)
+        
+        source = insertDrawRectIn(source: source)
         
         return source
     }
