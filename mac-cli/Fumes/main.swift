@@ -13,10 +13,10 @@ func parse() -> String? {
     var parser = CommandLineParser(title: "Fumes", description: "Fumes transpiles PaintCode's static objects into configurable views.")
     parser.arguments = CommandLine.arguments
 
-    
     parser.register(key: "input", shortKey: "i", description: "a path to get the .swift source code")
     parser.register(key: "output", shortKey: "o", description: "a path to write the transpiled code")
-
+    parser.register(key: "super", shortKey: "c", description: "an optional superclass for the resulting class. UIView by default.")
+    
     if parser.boolForKey("help") {
         parser.printHelp()
         return nil;
@@ -33,7 +33,13 @@ func parse() -> String? {
     guard let source = String(data: data, encoding: .utf8) else { print("ERROR: Unable to create a string with data at input path \(input)."); return nil }
     
     let transpiler = PaintCodeTranspiler()
-    guard let updated = transpiler.transpile(source) else { print("ERROR: Unable to transpile source code"); return nil }
+    var config = PaintCodeTranspilerConfig()
+    
+    if let superclass = parser.stringFor(key: "super") {
+        config.className = superclass;
+    }
+    
+    guard let updated = transpiler.transpile(source, config: config) else { print("ERROR: Unable to transpile source code"); return nil }
 
     guard ((try? updated.write(toFile:output, atomically: true, encoding: .utf8)) != nil) else { print("ERROR: Unable to write transpiled code to output \(output)"); return nil }
 
