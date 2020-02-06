@@ -18,11 +18,14 @@ You may also specify a `--super SuperClass` for the finished code, or accept the
 
 ## Options
 
-| Option  | Description                                                                                                                                             |  |
-|:--------|:--------------------------------------------------------------------------------------------------------------------------------------------------------|:-|
-| `$1`     | The first argument is the input, where content should come from. |  |
-| `$2`     | The second argument is the output, where the modified files should be saved to. If omitted, they will overwrite the input. |
-| `--super` | The superclass that should be substituted for `NSObject`. `UIView`, by default, but you may use your own view subclass if you like. This is useful, for example, for implementing class clusters. |
+
+| Flag    |       | Description |
+|:----------|:--------|:-------|
+| `--input`	| `-i`   |	a path to get the .swift source code. You may also use the first argument.  |
+| `--output`| `-o`	 |  a path to write the transpiled code You may also use the second argument.  |
+| `--super`	|  `-c`  |	an optional superclass for the resulting class. UIView by default.  |
+| `--help`	|  `-h`  |	                |
+
 
 
 ## Formatting Sketch Files
