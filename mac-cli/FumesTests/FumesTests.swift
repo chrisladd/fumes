@@ -59,10 +59,15 @@ class FumesTests: XCTestCase {
     
     func testPrivateColorVariablesAreInserted() {
         let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains("let triangleFillColor = UIColor(white: 0.73, alpha: 1)"))
+    }
+    
+    func testTextContents() {
+        let result = resultForFixture("CircleSquare.swift")!
 
         print(result)
         
-        XCTAssertTrue(result.contains("let triangleFillColor = UIColor(white: 0.73, alpha: 1)"))
+        XCTAssertTrue(result.contains("var label2TextValue = \"circle\""))
     }
     
     
