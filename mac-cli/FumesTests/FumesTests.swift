@@ -66,7 +66,7 @@ class FumesTests: XCTestCase {
     
     func testTextContents() {
         let result = resultForFixture("CircleSquare.swift")!
-        XCTAssertTrue(result.contains("var label2TextValue = \"circle\""))
+        XCTAssertTrue(result.contains("var label2Text = \"circle\""))
     }
     
     func testFontsAreExtracted() {
