@@ -64,12 +64,13 @@ class FumesTests: XCTestCase {
     
     func testTextContents() {
         let result = resultForFixture("CircleSquare.swift")!
-
-        print(result)
-        
         XCTAssertTrue(result.contains("var label2TextValue = \"circle\""))
     }
     
+    func testFontsAreExtracted() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains("var label2Font = UIFont(name: \"Helvetica\", size: 11)!"))
+    }
     
     
 }

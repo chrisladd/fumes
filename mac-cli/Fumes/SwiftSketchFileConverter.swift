@@ -12,30 +12,7 @@ public struct SwiftConverterConfig {
     public var className = "UIView"
 }
 
-enum Visibility {
-    case _public, _private
-}
-
-protocol Variable {
-    var visibility: Visibility { get set }
-    
-    func variableName() -> String
-    func variableKeyword() -> String
-    func variableValue() -> String
-}
-
-extension Variable {
-    func variableKeyword() -> String {
-        if visibility == ._private {
-            return "let"
-        }
-        
-        return "public var"
-    }
-}
-
 public struct SwiftSketchFileConverter {
-    
     public init() {
         
     }
@@ -77,63 +54,19 @@ public struct SwiftSketchFileConverter {
         return groupName
     }
     
-    
-    
-    struct NamedColor: Variable {
-        var visibility: Visibility
-        
-        enum ColorType {
-            case stroke, fill
-        }
-        
-        
-        let groupName: String
-        let color: String
-        let type: ColorType
-        
-        init(groupName: String, color: String, type: ColorType) {
-            self.groupName = groupName
-            self.color = color
-            self.type = type
-            
-            if groupName.starts(with: "_") {
-                visibility = ._private
-            }
-            else {
-                visibility = ._public
-            }
-        }
-
-        func variableValue() -> String {
-            return color
-        }
-        
-        func variableName() -> String {
-            let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
-            let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
-            
-            if type == .stroke {
-                return firstWord + "StrokeColor"
-            }
-            else {
-                return firstWord + "FillColor"
-            }
-        }
-    }
-    
-    func replaceNamedColors(_ source: String) -> (source: String, color: [NamedColor]) {
+    func replaceColorVariables(_ source: String) -> (source: String, color: [ColorVariable]) {
         var updatedLines = [String]()
-        var namedColors = [NamedColor]()
+        var namedColors = [ColorVariable]()
         
         source.enumerateSubstrings(in: source.startIndex..<source.endIndex, options: [.byLines]) { (line, enclosingRange, range, _) in
             if var mutableLine = line {
-                var namedColor: NamedColor?
+                var namedColor: ColorVariable?
                 
                 if mutableLine.contains(".setStroke()") {
                     let color = mutableLine.replacingOccurrences(of: ".setStroke()", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
                     
                     if let name = self.nameForGroupIn(source: source, before: range) {
-                        namedColor = NamedColor(groupName: name, color: color, type: .stroke)
+                        namedColor = ColorVariable(groupName: name, color: color, type: .stroke)
                     }
                 }
                 
@@ -141,7 +74,7 @@ public struct SwiftSketchFileConverter {
                     let color = mutableLine.replacingOccurrences(of: ".setFill()", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
                     
                     if let name = self.nameForGroupIn(source: source, before: range) {
-                        namedColor = NamedColor(groupName: name, color: color, type: .fill)
+                        namedColor = ColorVariable(groupName: name, color: color, type: .fill)
                     }
                 }
 
@@ -157,37 +90,8 @@ public struct SwiftSketchFileConverter {
         return (updatedLines.joined(separator: "\n"), namedColors)
     }
     
-    struct StringVariable: Variable {
-        var visibility: Visibility
-        let groupName: String
-        let text: String
-
-        func variableValue() -> String {
-            return "\"" + text + "\""
-        }
-        
-        init(groupName: String, text: String) {
-            self.groupName = groupName
-            self.text = text
-            
-            if groupName.starts(with: "_") {
-                visibility = ._private
-            }
-            else {
-                visibility = ._public
-            }
-        }
-        
-        func variableName() -> String {
-            let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
-            let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
-            
-            return firstWord + "TextValue"
-        }
-    }
-    
-    func replaceRawStringValues(_ source: String) -> (source: String, variables: [StringVariable]) {
-        var stringVariables = [StringVariable]()
+    func replaceTextVariables(_ source: String) -> (source: String, variables: [TextVariable]) {
+        var stringVariables = [TextVariable]()
         var updatedLines = [String]()
         // NSMutableAttributedString(string:
         source.enumerateSubstrings(in: source.startIndex..<source.endIndex, options: [.byLines]) { (line, enclosingRange, range, _) in
@@ -197,7 +101,7 @@ public struct SwiftSketchFileConverter {
                     let stringValue = mutableLine.components(separatedBy: "NSMutableAttributedString(string: \"")[1].replacingOccurrences(of: "\")", with: "")
                     
                     if let groupName = self.nameForGroupIn(source: source, before: range) {
-                        let variable = StringVariable(groupName: groupName, text: stringValue)
+                        let variable = TextVariable(groupName: groupName, text: stringValue)
                         stringVariables.append(variable)
                         
                         mutableLine = mutableLine.replacingOccurrences(of: "\"\(stringValue)\"", with: variable.variableName())
@@ -239,10 +143,10 @@ public struct SwiftSketchFileConverter {
         
         source = source.replacingOccurrences(of: ": NSObject {", with: ": \(config.className) {")
         
-        let colorResult = replaceNamedColors(source)
+        let colorResult = replaceColorVariables(source)
         source = insertVariables(source: colorResult.source, variables: colorResult.color)
         
-        let textResult = replaceRawStringValues(source)
+        let textResult = replaceTextVariables(source)
         source = insertVariables(source: textResult.source, variables: textResult.variables)
         
         return source

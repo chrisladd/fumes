@@ -13,6 +13,11 @@
 		8EB3DA2A23EC863D00CE4C36 /* fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 8EB3DA2923EC863D00CE4C36 /* fixtures */; };
 		8EB3DA2C23EC877000CE4C36 /* SwiftSketchFileConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA2B23EC877000CE4C36 /* SwiftSketchFileConverter.swift */; };
 		8EB3DA3023EC8C2A00CE4C36 /* SwiftSketchFileConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA2B23EC877000CE4C36 /* SwiftSketchFileConverter.swift */; };
+		8EB3DA3223ECAFA700CE4C36 /* Variable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA3123ECAFA700CE4C36 /* Variable.swift */; };
+		8EB3DA3323ECAFAA00CE4C36 /* Variable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA3123ECAFA700CE4C36 /* Variable.swift */; };
+		8EB3DA3523ECAFDB00CE4C36 /* ColorVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA3423ECAFDB00CE4C36 /* ColorVariable.swift */; };
+		8EB3DA3623ECAFDD00CE4C36 /* ColorVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA3423ECAFDB00CE4C36 /* ColorVariable.swift */; };
+		8EB3DA3B23ECB08A00CE4C36 /* TextVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA3A23ECB08A00CE4C36 /* TextVariable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,6 +40,9 @@
 		8EB3DA2523EC859100CE4C36 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8EB3DA2923EC863D00CE4C36 /* fixtures */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fixtures; path = ../../fixtures; sourceTree = "<group>"; };
 		8EB3DA2B23EC877000CE4C36 /* SwiftSketchFileConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftSketchFileConverter.swift; sourceTree = "<group>"; };
+		8EB3DA3123ECAFA700CE4C36 /* Variable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Variable.swift; sourceTree = "<group>"; };
+		8EB3DA3423ECAFDB00CE4C36 /* ColorVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorVariable.swift; sourceTree = "<group>"; };
+		8EB3DA3A23ECB08A00CE4C36 /* TextVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextVariable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +87,9 @@
 			children = (
 				8EB3DA1223EC84CA00CE4C36 /* main.swift */,
 				8EB3DA2B23EC877000CE4C36 /* SwiftSketchFileConverter.swift */,
+				8EB3DA3123ECAFA700CE4C36 /* Variable.swift */,
+				8EB3DA3423ECAFDB00CE4C36 /* ColorVariable.swift */,
+				8EB3DA3A23ECB08A00CE4C36 /* TextVariable.swift */,
 			);
 			path = Fumes;
 			sourceTree = "<group>";
@@ -190,7 +201,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EB3DA2C23EC877000CE4C36 /* SwiftSketchFileConverter.swift in Sources */,
+				8EB3DA3223ECAFA700CE4C36 /* Variable.swift in Sources */,
 				8EB3DA1323EC84CA00CE4C36 /* main.swift in Sources */,
+				8EB3DA3523ECAFDB00CE4C36 /* ColorVariable.swift in Sources */,
+				8EB3DA3B23ECB08A00CE4C36 /* TextVariable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,7 +213,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				8EB3DA3023EC8C2A00CE4C36 /* SwiftSketchFileConverter.swift in Sources */,
+				8EB3DA3323ECAFAA00CE4C36 /* Variable.swift in Sources */,
 				8EB3DA2423EC859100CE4C36 /* FumesTests.swift in Sources */,
+				8EB3DA3623ECAFDD00CE4C36 /* ColorVariable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
