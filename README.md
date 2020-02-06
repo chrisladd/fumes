@@ -1,6 +1,6 @@
 # Fumes
 
-Fumes removes the code-smell from PaintCode generated drawing.
+Fumes transpiles PaintCode's static objects into configurable views
 
 ## How it works
 
