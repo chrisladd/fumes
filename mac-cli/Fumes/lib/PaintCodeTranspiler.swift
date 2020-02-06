@@ -1,5 +1,5 @@
 //
-//  SwiftSketchFileConverter.swift
+//  PaintCodeTranspiler.swift
 //  Fumes
 //
 //  Created by Christopher Ladd on 2/6/20.
@@ -8,24 +8,26 @@
 
 import Foundation
 
-public struct SwiftConverterConfig {
-    public var className = "UIView"
-}
 
-public struct SwiftSketchFileConverter {
+public struct PaintCodeTranspiler {
+    
     // MARK: - Public
     
-    
-    public func convertFile(at path: String, config: SwiftConverterConfig? = nil) -> String? {
-        let internalConfig: SwiftConverterConfig;
+    public func transpile(_ sourceCode: String, config: PaintCodeTranspilerConfig? = nil) -> String? {
+        let internalConfig: PaintCodeTranspilerConfig;
         if let config = config {
             internalConfig = config
         }
         else {
-            internalConfig = SwiftConverterConfig()
+            internalConfig = PaintCodeTranspilerConfig()
+        }
+
+        guard internalConfig.language == .swift else {
+            print("Error: unsupported source type")
+            return nil
         }
         
-        guard var source = try? String(contentsOfFile: path) else { return nil }
+        var source = sourceCode;
         
         if let className = classNameFrom(source) {
             print(className)

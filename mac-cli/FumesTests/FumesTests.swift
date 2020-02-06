@@ -9,7 +9,7 @@
 import XCTest
 
 class FumesTests: XCTestCase {
-    let converter = SwiftSketchFileConverter()
+    let transpiler = PaintCodeTranspiler()
     
     // MARK: - Fixtures
     
@@ -20,7 +20,9 @@ class FumesTests: XCTestCase {
     
     func resultForFixture(_ fixtureName: String) -> String? {
         guard let path = pathForFixture(fixtureName) else { return nil }
-        return converter.convertFile(at: path)
+        guard var source = try? String(contentsOfFile: path) else { return nil }
+        
+        return transpiler.transpile(source)
     }
     
     // MARK: - Tests
