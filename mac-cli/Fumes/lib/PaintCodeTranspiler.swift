@@ -30,7 +30,6 @@ public struct PaintCodeTranspiler {
         var source = sourceCode;
         
         if let className = classNameFrom(source) {
-            print(className)
             source = removeClassFunctionsFrom(source, className: className)
         }
         
