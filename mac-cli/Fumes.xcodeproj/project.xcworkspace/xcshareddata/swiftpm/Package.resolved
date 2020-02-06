@@ -5,9 +5,9 @@
         "package": "DashDashSwift",
         "repositoryURL": "https://github.com/chrisladd/DashDashSwift.git",
         "state": {
-          "branch": null,
-          "revision": "337b479ee2c336fac595c39bfcf30ef0c62b36e6",
-          "version": "0.4.0"
+          "branch": "master",
+          "revision": "fa0bb532864520d57a4eb51bf8490f045681089d",
+          "version": null
         }
       }
     ]
