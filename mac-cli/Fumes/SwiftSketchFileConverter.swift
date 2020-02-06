@@ -90,23 +90,26 @@ public struct SwiftSketchFileConverter {
         return (updatedLines.joined(separator: "\n"), namedColors)
     }
     
+    func boundedValueFromString(_ string: String, left: String, right: String) -> String? {
+        guard string.contains(left) else { return nil }
+        let components = string.components(separatedBy: left)
+        guard components.count > 1 else { return nil }
+        return components[1].components(separatedBy: right).first
+    }
+    
     func replaceTextVariables(_ source: String) -> (source: String, variables: [TextVariable]) {
         var stringVariables = [TextVariable]()
         var updatedLines = [String]()
         // NSMutableAttributedString(string:
         source.enumerateSubstrings(in: source.startIndex..<source.endIndex, options: [.byLines]) { (line, enclosingRange, range, _) in
             if var mutableLine = line {
-                if mutableLine.contains("NSMutableAttributedString(string: ") {
-                    
-                    let stringValue = mutableLine.components(separatedBy: "NSMutableAttributedString(string: \"")[1].replacingOccurrences(of: "\")", with: "")
-                    
+                if let stringValue = self.boundedValueFromString(mutableLine, left: "NSMutableAttributedString(string: \"", right: "\")") {
                     if let groupName = self.nameForGroupIn(source: source, before: range) {
                         let variable = TextVariable(groupName: groupName, text: stringValue)
                         stringVariables.append(variable)
                         
                         mutableLine = mutableLine.replacingOccurrences(of: "\"\(stringValue)\"", with: variable.variableName())
                     }
-                    
                 }
                 
                 updatedLines.append(mutableLine)
@@ -114,6 +117,28 @@ public struct SwiftSketchFileConverter {
         }
         
         return (updatedLines.joined(separator: "\n"), stringVariables)
+    }
+    
+    func replaceFontVariables(_ source: String) -> (source: String, variables: [FontVariable]) {
+        var fontVariables = [FontVariable]()
+        var updatedLines = [String]()
+        // NSMutableAttributedString(string:
+        source.enumerateSubstrings(in: source.startIndex..<source.endIndex, options: [.byLines]) { (line, enclosingRange, range, _) in
+            if var mutableLine = line {
+                if let stringValue = self.boundedValueFromString(mutableLine, left: ".addAttribute(.font, value: ", right: ", range: ") {
+                    if let groupName = self.nameForGroupIn(source: source, before: range) {
+                        let variable = FontVariable(groupName: groupName, text: stringValue)
+                        fontVariables.append(variable)
+                        
+                        mutableLine = mutableLine.replacingOccurrences(of: stringValue, with: variable.variableName())
+                    }
+                }
+                
+                updatedLines.append(mutableLine)
+            }
+        }
+        
+        return (updatedLines.joined(separator: "\n"), fontVariables)
     }
     
     func insertVariables(source: String, variables: [Variable]) -> String {
@@ -148,6 +173,9 @@ public struct SwiftSketchFileConverter {
         
         let textResult = replaceTextVariables(source)
         source = insertVariables(source: textResult.source, variables: textResult.variables)
+        
+        let fontResult = replaceFontVariables(source)
+        source = insertVariables(source: fontResult.source, variables: fontResult.variables)
         
         return source
     }
