@@ -12,7 +12,7 @@ struct ColorVariable: Variable {
     var visibility: Visibility
     
     enum ColorType {
-        case stroke, fill
+        case stroke, fill, text
     }
     
     let groupName: String
@@ -40,7 +40,10 @@ struct ColorVariable: Variable {
         let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
         let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
         
-        if type == .stroke {
+        if type == .text {
+            return firstWord + "TextColor"
+        }
+        else if type == .stroke {
             return firstWord + "StrokeColor"
         }
         else {

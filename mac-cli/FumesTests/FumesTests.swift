@@ -11,6 +11,8 @@ import XCTest
 class FumesTests: XCTestCase {
     let converter = SwiftSketchFileConverter()
     
+    // MARK: - Fixtures
+    
     func pathForFixture(_ fixtureName: String) -> String? {
         let bundle = Bundle(for: type(of: self))
         return bundle.path(forResource: fixtureName, ofType: nil, inDirectory: "fixtures")
@@ -21,14 +23,8 @@ class FumesTests: XCTestCase {
         return converter.convertFileAt(path: path, config: SwiftConverterConfig())
     }
     
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
+    // MARK: - Tests
+    
     func testFixturePathsExist() {
         XCTAssertNotNil(pathForFixture("CircleSquare.swift"))
     }
@@ -57,6 +53,12 @@ class FumesTests: XCTestCase {
         XCTAssertTrue(result.contains("var dotStrokeColor = UIColor(hue: 0.068, saturation: 0.837, brightness: 0.769, alpha: 1)"))
     }
     
+    func testTextColorIsExtracted() {
+        let result = resultForFixture("CircleSquare.swift")!
+
+        XCTAssertTrue(result.contains("var label2TextColor = UIColor(hue: 0.45, saturation: 0.919, brightness: 0.835, alpha: 1)"))
+    }
+    
     func testPrivateColorVariablesAreInserted() {
         let result = resultForFixture("CircleSquare.swift")!
         XCTAssertTrue(result.contains("let triangleFillColor = UIColor(white: 0.73, alpha: 1)"))
@@ -82,4 +84,5 @@ class FumesTests: XCTestCase {
         XCTAssertTrue(result.contains("drawCircle_square(frame: rect)"))
         XCTAssertTrue(result.contains("override func sizeThatFits(_ size: CGSize) -> CGSize"))
     }
+    
 }

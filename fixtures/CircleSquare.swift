@@ -36,13 +36,9 @@ class CircleSquare: NSObject {
             paragraphStyle.alignment = .right
             label2.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: label2.length))
         }
+        label2.addAttribute(.foregroundColor, value: UIColor(hue: 0.45, saturation: 0.919, brightness: 0.835, alpha: 1), range: NSRange(location: 0, length: label2.length))
         context.saveGState()
-        context.setAlpha(0.5)
-        context.beginTransparencyLayer(auxiliaryInfo: nil)
-        do {
-            label2.draw(in: CGRect(x: 68.97, y: 5, width: 45, height: 15))
-        }
-        context.endTransparencyLayer()
+        label2.draw(in: CGRect(x: 68.97, y: 5, width: 45, height: 15))
         context.restoreGState()
         
         /// _label1

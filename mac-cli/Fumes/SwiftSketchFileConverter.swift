@@ -77,6 +77,14 @@ public struct SwiftSketchFileConverter {
                         namedColor = ColorVariable(groupName: name, color: color, type: .fill)
                     }
                 }
+                
+                if mutableLine.contains(".addAttribute(.foregroundColor, value: UIColor") {
+                    if let color = self.boundedValueFromString(mutableLine, left: ".addAttribute(.foregroundColor, value: ", right: ", range") {
+                        if let name = self.nameForGroupIn(source: source, before: range) {
+                            namedColor = ColorVariable(groupName: name, color: color, type: .text)
+                        }
+                    }
+                }
 
                 if let namedColor = namedColor {
                     namedColors.append(namedColor)
