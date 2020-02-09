@@ -452,8 +452,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/chrisladd/DashDashSwift.git";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
