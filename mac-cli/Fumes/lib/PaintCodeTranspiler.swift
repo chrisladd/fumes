@@ -79,6 +79,8 @@ public struct PaintCodeTranspiler {
     func insertInitializersIn(source: String, bgColor: String?) -> String {
         let bg = bgColor ?? ".clear"
         let initializers = """
+        
+        
             func commonInit() {
                 backgroundColor = \(bg)
             }
@@ -96,12 +98,11 @@ public struct PaintCodeTranspiler {
         
         var updatedLines = [String]()
         source.enumerateLines { (line, stop) in
-
+            updatedLines.append(line)
+            
             if line.starts(with: "class ") {
                 updatedLines.append(initializers)
             }
-            
-            updatedLines.append(line)
         }
         
         return updatedLines.joined(separator: "\n")
@@ -236,7 +237,7 @@ public struct PaintCodeTranspiler {
     func replaceFontVariables(_ source: String) -> (source: String, variables: [FontVariable]) {
         var fontVariables = [FontVariable]()
         var updatedLines = [String]()
-        // NSMutableAttributedString(string:
+        
         source.enumerateSubstrings(in: source.startIndex..<source.endIndex, options: [.byLines]) { (line, enclosingRange, range, _) in
             if var mutableLine = line {
                 if let stringValue = self.boundedValueFromString(mutableLine, left: ".addAttribute(.font, value: ", right: ", range: ") {

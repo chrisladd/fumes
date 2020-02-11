@@ -74,9 +74,15 @@ class FumesTests: XCTestCase {
     func testFontsAreExtracted() {
         let result = resultForFixture("CircleSquare.swift")!
         
-        XCTAssertTrue(result.contains("var label2Font = UIFont(name: \"Helvetica\", size: 11)!"))
-        
+        XCTAssertTrue(result.contains("var label2Font = UIFont(name: \"Helvetica\", size: 11)"))
         XCTAssertFalse(result.contains("label2.addAttribute(.font, value: UIFont(name: \"Helvetica\", size: 11)!"))
+    }
+    
+    func testFontsAreNilCoalescedNotForceUnwrapped() {
+        let result = resultForFixture("CircleSquare.swift")!
+        
+        XCTAssertTrue(result.contains("var label2Font = UIFont(name: \"Helvetica\", size: 11) ?? UIFont.systemFont(ofSize: 11.0)"))
+        XCTAssertFalse(result.contains("label2Font = UIFont(name: \"Helvetica\", size: 11)!"))
     }
     
     func testDrawingCodeIsCreated() {

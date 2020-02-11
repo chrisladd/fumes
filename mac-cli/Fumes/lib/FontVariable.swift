@@ -14,8 +14,19 @@ struct FontVariable: Variable {
     let groupName: String
     let text: String
 
+    func fontSize() -> Double? {
+        let comps = text.components(separatedBy: ", size: ")
+        guard comps.count >= 2 else { return nil }
+        guard let string = comps[1].components(separatedBy: ")").first else { return nil }
+        return Double(string)
+    }
+    
     func variableValue() -> String {
-        return text
+        print(fontSize())
+        print(text)
+        
+        guard let size = fontSize() else { return text }
+        return text.replacingOccurrences(of: "!", with: "") + " ?? UIFont.systemFont(ofSize: \(String(size)))"
     }
     
     init(groupName: String, text: String) {
