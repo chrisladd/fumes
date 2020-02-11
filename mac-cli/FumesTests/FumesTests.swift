@@ -44,7 +44,6 @@ class FumesTests: XCTestCase {
     func testClassMethodsAreReplacedByInstanceMethods() {
         let result = resultForFixture("CircleSquare.swift")!
         
-        XCTAssertFalse(result.contains("class func"))
         XCTAssertFalse(result.contains("CircleSquare.draw"))
     }
     
@@ -90,7 +89,13 @@ class FumesTests: XCTestCase {
         
         XCTAssertTrue(result.contains("override func draw("))
         XCTAssertTrue(result.contains("drawCircle_square(frame: rect)"))
+    }
+    
+    func testSizeGettersAreCreated() {
+        let result = resultForFixture("CircleSquare.swift")!
+        
         XCTAssertTrue(result.contains("override func sizeThatFits(_ size: CGSize) -> CGSize"))
+        XCTAssertTrue(result.contains("class func sizeThatFits"))
     }
     
     func testInitializersAndBackgroundColor() {

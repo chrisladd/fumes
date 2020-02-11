@@ -131,6 +131,14 @@ public struct PaintCodeTranspiler {
          return CGSize(width: size.width, height: height)
     }
 
+    class func sizeThatFits(_ size: CGSize) -> CGSize {
+        // scale the size to the given width
+         let nativeRect = \(rectValue)
+         let aspect = size.width / nativeRect.width
+         let height = nativeRect.height * aspect
+
+         return CGSize(width: size.width, height: height)
+    }
                     
 """
 

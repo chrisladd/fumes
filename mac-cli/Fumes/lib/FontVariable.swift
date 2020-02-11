@@ -22,9 +22,6 @@ struct FontVariable: Variable {
     }
     
     func variableValue() -> String {
-        print(fontSize())
-        print(text)
-        
         guard let size = fontSize() else { return text }
         return text.replacingOccurrences(of: "!", with: "") + " ?? UIFont.systemFont(ofSize: \(String(size)))"
     }
