@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "DashDashSwift",
-        "repositoryURL": "https://github.com/chrisladd/DashDashSwift.git",
+        "repositoryURL": "https://github.com/chrisladd/DashDashSwift",
         "state": {
           "branch": null,
           "revision": "1da1113c822ae6cddfb4aa4e792642cc7c742af7",

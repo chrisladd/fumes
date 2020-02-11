@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E71460223F35134000C413A /* DashDashSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8E71460123F35134000C413A /* DashDashSwift */; };
 		8EB3DA1323EC84CA00CE4C36 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA1223EC84CA00CE4C36 /* main.swift */; };
-		8EB3DA1C23EC853200CE4C36 /* DashDashSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8EB3DA1B23EC853200CE4C36 /* DashDashSwift */; };
 		8EB3DA2423EC859100CE4C36 /* FumesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA2323EC859100CE4C36 /* FumesTests.swift */; };
 		8EB3DA2A23EC863D00CE4C36 /* fixtures in Resources */ = {isa = PBXBuildFile; fileRef = 8EB3DA2923EC863D00CE4C36 /* fixtures */; };
 		8EB3DA2C23EC877000CE4C36 /* PaintCodeTranspiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA2B23EC877000CE4C36 /* PaintCodeTranspiler.swift */; };
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8EB3DA1C23EC853200CE4C36 /* DashDashSwift in Frameworks */,
+				8E71460223F35134000C413A /* DashDashSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,7 +138,7 @@
 			);
 			name = Fumes;
 			packageProductDependencies = (
-				8EB3DA1B23EC853200CE4C36 /* DashDashSwift */,
+				8E71460123F35134000C413A /* DashDashSwift */,
 			);
 			productName = Fumes;
 			productReference = 8EB3DA0F23EC84CA00CE4C36 /* Fumes */;
@@ -189,7 +189,7 @@
 			);
 			mainGroup = 8EB3DA0623EC84CA00CE4C36;
 			packageReferences = (
-				8EB3DA1A23EC853200CE4C36 /* XCRemoteSwiftPackageReference "DashDashSwift" */,
+				8E71460023F35134000C413A /* XCRemoteSwiftPackageReference "DashDashSwift" */,
 			);
 			productRefGroup = 8EB3DA1023EC84CA00CE4C36 /* Products */;
 			projectDirPath = "";
@@ -448,9 +448,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		8EB3DA1A23EC853200CE4C36 /* XCRemoteSwiftPackageReference "DashDashSwift" */ = {
+		8E71460023F35134000C413A /* XCRemoteSwiftPackageReference "DashDashSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/chrisladd/DashDashSwift.git";
+			repositoryURL = "https://github.com/chrisladd/DashDashSwift";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.1.0;
@@ -459,9 +459,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8EB3DA1B23EC853200CE4C36 /* DashDashSwift */ = {
+		8E71460123F35134000C413A /* DashDashSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 8EB3DA1A23EC853200CE4C36 /* XCRemoteSwiftPackageReference "DashDashSwift" */;
+			package = 8E71460023F35134000C413A /* XCRemoteSwiftPackageReference "DashDashSwift" */;
 			productName = DashDashSwift;
 		};
 /* End XCSwiftPackageProductDependency section */

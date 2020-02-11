@@ -20,7 +20,7 @@ class FumesTests: XCTestCase {
     
     func resultForFixture(_ fixtureName: String) -> String? {
         guard let path = pathForFixture(fixtureName) else { return nil }
-        guard var source = try? String(contentsOfFile: path) else { return nil }
+        guard let source = try? String(contentsOfFile: path) else { return nil }
         
         return transpiler.transpile(source)
     }
