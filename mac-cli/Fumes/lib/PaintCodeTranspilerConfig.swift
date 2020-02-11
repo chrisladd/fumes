@@ -24,4 +24,9 @@ public struct PaintCodeTranspilerConfig {
      Currently, only .swift is supported
      */
     public var language: PaintCodeSourceLanguage = .swift
+    
+    /**
+     An initializer for a background color
+     */
+    public var bg: String?
 }

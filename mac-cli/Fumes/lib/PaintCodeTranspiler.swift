@@ -35,6 +35,8 @@ public struct PaintCodeTranspiler {
         
         source = source.replacingOccurrences(of: ": NSObject {", with: ": \(internalConfig.className) {")
         
+        source = insertInitializersIn(source: source, bgColor: config?.bg)
+        
         let colorResult = replaceColorVariables(source)
         source = insertVariables(source: colorResult.source, variables: colorResult.color)
         
@@ -74,12 +76,42 @@ public struct PaintCodeTranspiler {
         return nil
     }
     
+    func insertInitializersIn(source: String, bgColor: String?) -> String {
+        let bg = bgColor ?? ".clear"
+        let initializers = """
+            func commonInit() {
+                backgroundColor = \(bg)
+            }
+            
+            override init(frame: CGRect) {
+                super.init(frame: frame)
+                commonInit()
+            }
+            
+            required init?(coder: NSCoder) {
+                super.init(coder: coder)
+                commonInit()
+            }
+        """
+        
+        var updatedLines = [String]()
+        source.enumerateLines { (line, stop) in
+
+            if line.starts(with: "class ") {
+                updatedLines.append(initializers)
+            }
+            
+            updatedLines.append(line)
+        }
+        
+        return updatedLines.joined(separator: "\n")
+    }
+    
     // MARK: Drawing
         
     func insertDrawRectIn(source: String) -> String {
         var updatedLines = [String]()
         source.enumerateLines { (line, stop) in
-            
             if let functionName = self.boundedValueFromString(line, left: "func draw", right: "(frame targetFrame: ") {
                 if let rectValue = self.boundedValueFromString(line, left: "targetFrame: CGRect = ", right: ", resizing") {
                     

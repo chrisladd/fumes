@@ -87,4 +87,27 @@ class FumesTests: XCTestCase {
         XCTAssertTrue(result.contains("override func sizeThatFits(_ size: CGSize) -> CGSize"))
     }
     
+    func testInitializersAndBackgroundColor() {
+        let result = resultForFixture("CircleSquare.swift")!
+        /*
+         func commonInit() {
+             backgroundColor = .clear
+         }
+         
+         override init(frame: CGRect) {
+             super.init(frame: frame)
+             commonInit()
+         }
+         
+         required init?(coder: NSCoder) {
+             super.init(coder: coder)
+             commonInit()
+         }
+
+         */
+        XCTAssertTrue(result.contains("required init?(coder: NSCoder) {"))
+        XCTAssertTrue(result.contains("override init(frame: CGRect) {"))
+        XCTAssertTrue(result.contains("backgroundColor = .clear"))
+    }
+    
 }

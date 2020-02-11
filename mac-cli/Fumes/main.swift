@@ -15,6 +15,7 @@ func parse() -> String? {
 
     parser.register(key: "input", shortKey: "i", description: "a path to get the .swift source code")
     parser.register(key: "output", shortKey: "o", description: "a path to write the transpiled code")
+    parser.register(key: "bg", shortKey: nil, description: "a string to set the background UIColor for the view. `.clear` by default")
     parser.register(key: "super", shortKey: "c", description: "an optional superclass for the resulting class. UIView by default.")
     
     if parser.boolForKey("help") {
@@ -34,6 +35,8 @@ func parse() -> String? {
     
     let transpiler = PaintCodeTranspiler()
     var config = PaintCodeTranspilerConfig()
+    
+    config.bg = parser.stringFor(key: "bg")
     
     if let superclass = parser.stringFor(key: "super") {
         config.className = superclass;
