@@ -25,20 +25,8 @@
 		8EB3DA4523ECC3A200CE4C36 /* PaintCodeTranspilerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA4323ECC3A200CE4C36 /* PaintCodeTranspilerConfig.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		8EB3DA0D23EC84CA00CE4C36 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
-		8EB3DA0F23EC84CA00CE4C36 /* Fumes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Fumes; sourceTree = BUILT_PRODUCTS_DIR; };
+		8EB3DA0F23EC84CA00CE4C36 /* fumes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fumes; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EB3DA1223EC84CA00CE4C36 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		8EB3DA2123EC859100CE4C36 /* FumesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FumesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EB3DA2323EC859100CE4C36 /* FumesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FumesTests.swift; sourceTree = "<group>"; };
@@ -83,7 +71,7 @@
 		8EB3DA1023EC84CA00CE4C36 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8EB3DA0F23EC84CA00CE4C36 /* Fumes */,
+				8EB3DA0F23EC84CA00CE4C36 /* fumes */,
 				8EB3DA2123EC859100CE4C36 /* FumesTests.xctest */,
 			);
 			name = Products;
@@ -130,7 +118,8 @@
 			buildPhases = (
 				8EB3DA0B23EC84CA00CE4C36 /* Sources */,
 				8EB3DA0C23EC84CA00CE4C36 /* Frameworks */,
-				8EB3DA0D23EC84CA00CE4C36 /* CopyFiles */,
+				8E7D374F23F46459002039C4 /* Install to /usr/local/bin */,
+				8E7D375023F4653E002039C4 /* Copy to ../bin/fumes */,
 			);
 			buildRules = (
 			);
@@ -141,7 +130,7 @@
 				8E71460123F35134000C413A /* DashDashSwift */,
 			);
 			productName = Fumes;
-			productReference = 8EB3DA0F23EC84CA00CE4C36 /* Fumes */;
+			productReference = 8EB3DA0F23EC84CA00CE4C36 /* fumes */;
 			productType = "com.apple.product-type.tool";
 		};
 		8EB3DA2023EC859100CE4C36 /* FumesTests */ = {
@@ -211,6 +200,46 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		8E7D374F23F46459002039C4 /* Install to /usr/local/bin */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Install to /usr/local/bin";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp ${BUILT_PRODUCTS_DIR}/${EXECUTABLE_NAME} /usr/local/bin/fumes\n";
+		};
+		8E7D375023F4653E002039C4 /* Copy to ../bin/fumes */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy to ../bin/fumes";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "cp ${BUILT_PRODUCTS_DIR}/${EXECUTABLE_NAME} ${PROJECT_DIR}/../bin/fumes\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8EB3DA0B23EC84CA00CE4C36 /* Sources */ = {
@@ -363,7 +392,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C3NM52EUU5;
 				ENABLE_HARDENED_RUNTIME = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = fumes;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -374,7 +403,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = C3NM52EUU5;
 				ENABLE_HARDENED_RUNTIME = YES;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = fumes;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

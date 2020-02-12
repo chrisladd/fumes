@@ -6,15 +6,17 @@ Fumes transpiles PaintCode's static objects into configurable views
 
 Fumes automatically parameterizes hard-coded elements like colors, using PaintCode's automatically generated code comments as naming guidelines. It also converts the resulting object from `NSObject` to `UIView`, and sets the hardcoded color values as defaults, while exposing properties for clients to customize.
 
+## Installation
+
+Download and build the project located at `mac-cli`--this will install the `fumes` executable to your `/usr/local/bin`.
+
+Alternatively, you can copy the `fumes` binary from `bin/fumes` to `/usr/local/bin`
+
 ## Usage
 
-Copy the `fumes` binary to `usr/local/bin`
+Specify source and target files:
 
-then specify source and target directories:
-
-`fumes source_dir target_dir`
-
-You may also specify a `--super SuperClass` for the finished code, or accept the default of `UIView`.
+`fumes ./path/to/SourceFile.swift ./path/to/DestinationFile.swift`
 
 ## Options
 
@@ -25,7 +27,7 @@ You may also specify a `--super SuperClass` for the finished code, or accept the
 | `--output`| `-o`	 |  a path to write the transpiled code You may also use the second argument.  |
 | `--super`	|  `-c`  |	an optional superclass for the resulting class. UIView by default.  |
 | `--help`	|  `-h`  |	                |
-
+| `--bg`  |  | a string to set the background UIColor for the view. `.clear` by default |
 
 
 ## Formatting Sketch Files
