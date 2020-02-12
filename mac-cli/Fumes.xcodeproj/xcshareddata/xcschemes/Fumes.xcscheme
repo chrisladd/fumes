@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8EB3DA0E23EC84CA00CE4C36"
-               BuildableName = "Fumes"
+               BuildableName = "fumes"
                BlueprintName = "Fumes"
                ReferencedContainer = "container:Fumes.xcodeproj">
             </BuildableReference>
@@ -55,7 +55,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8EB3DA0E23EC84CA00CE4C36"
-            BuildableName = "Fumes"
+            BuildableName = "fumes"
             BlueprintName = "Fumes"
             ReferencedContainer = "container:Fumes.xcodeproj">
          </BuildableReference>
@@ -72,7 +72,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8EB3DA0E23EC84CA00CE4C36"
-            BuildableName = "Fumes"
+            BuildableName = "fumes"
             BlueprintName = "Fumes"
             ReferencedContainer = "container:Fumes.xcodeproj">
          </BuildableReference>

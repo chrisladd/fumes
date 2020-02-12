@@ -10,13 +10,16 @@ import Foundation
 import DashDashSwift
 
 func parse() -> String? {
-    var parser = CommandLineParser(title: "Fumes", description: "Fumes transpiles PaintCode's static objects into configurable views.")
+    var parser = CommandLineParser(title: "Fumes", description: """
+Fumes transpiles PaintCode's static objects into configurable views using layer names to create variables for color fills, strokes, text, fonts, and more.
+""")
     parser.arguments = CommandLine.arguments
 
     parser.register(key: "input", shortKey: "i", description: "a path to get the .swift source code")
     parser.register(key: "output", shortKey: "o", description: "a path to write the transpiled code")
     parser.register(key: "bg", shortKey: nil, description: "a string to set the background UIColor for the view. `.clear` by default")
     parser.register(key: "super", shortKey: "c", description: "an optional superclass for the resulting class. UIView by default.")
+    parser.register(key: "help", shortKey: "h", description: "show this help message")
     
     if parser.boolForKey("help") {
         parser.printHelp()
