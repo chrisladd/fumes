@@ -14,15 +14,9 @@ public struct PaintCodeTranspiler {
     // MARK: - Public
     
     public func transpile(_ sourceCode: String, config: PaintCodeTranspilerConfig? = nil) -> String? {
-        let internalConfig: PaintCodeTranspilerConfig;
-        if let config = config {
-            internalConfig = config
-        }
-        else {
-            internalConfig = PaintCodeTranspilerConfig()
-        }
+        let config = config ?? PaintCodeTranspilerConfig()
 
-        guard internalConfig.language == .swift else {
+        guard config.language == .swift else {
             print("Error: unsupported source type")
             return nil
         }
@@ -33,18 +27,19 @@ public struct PaintCodeTranspiler {
             source = removeClassFunctionsFrom(source, className: className)
         }
         
-        source = source.replacingOccurrences(of: ": NSObject {", with: ": \(internalConfig.className) {")
+        source = source.replacingOccurrences(of: ": NSObject {", with: ": \(config.className) {")
         
-        source = insertInitializersIn(source: source, bgColor: config?.bg)
+        source = insertInitializersIn(source: source, bgColor: config.bg)
         
         let colorResult = replaceColorVariables(source)
-        source = insertVariables(source: colorResult.source, variables: colorResult.color)
+        var usedVariableNames = [String]()
+        (source, usedVariableNames) = insertVariables(source: colorResult.source, variables: colorResult.color, existing: usedVariableNames, config: config)
         
         let textResult = replaceTextVariables(source)
-        source = insertVariables(source: textResult.source, variables: textResult.variables)
+        (source, usedVariableNames) = insertVariables(source: textResult.source, variables: textResult.variables, existing: usedVariableNames, config: config)
         
         let fontResult = replaceFontVariables(source)
-        source = insertVariables(source: fontResult.source, variables: fontResult.variables)
+        (source, usedVariableNames) = insertVariables(source: fontResult.source, variables: fontResult.variables, existing: usedVariableNames, config: config)
         
         source = insertDrawRectIn(source: source)
         
@@ -273,21 +268,31 @@ public struct PaintCodeTranspiler {
         return components[1].components(separatedBy: right).first
     }
 
-    func insertVariables(source: String, variables: [Variable]) -> String {
+    func insertVariables(source: String, variables: [Variable], existing existingVariableNames: [String], config: PaintCodeTranspilerConfig) -> (source: String, placedVariables: [String]) {
         var updatedLines = [String]()
+        var updatedVariableNames = existingVariableNames
         
         source.enumerateLines { (line, stop) in
             updatedLines.append(line)
             
             if line.starts(with: "class ") {
                 for variable in variables {
+                    let variableName = variable.variableName()
+                    guard updatedVariableNames.contains(variableName) == false else {
+                        if config.verbose {
+                            print("WARNING: duplicate variable named \(variableName). Consider renaming your source files.")
+                        }
+                        continue
+                    }
+                    
                     let varLine = "    \(variable.variableKeyword()) \(variable.variableName()) = \(variable.variableValue())"
+                    updatedVariableNames.append(variableName)
                     updatedLines.append(varLine)
                 }
             }
         }
         
-        return updatedLines.joined(separator: "\n")
+        return (updatedLines.joined(separator: "\n"), updatedVariableNames)
     }
     
     

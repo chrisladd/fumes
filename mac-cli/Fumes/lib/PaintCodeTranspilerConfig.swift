@@ -29,4 +29,9 @@ public struct PaintCodeTranspilerConfig {
      An initializer for a background color
      */
     public var bg: String?
+    
+    /**
+     Whether to output transpiler warnings to the console
+     */
+    public var verbose = false
 }
