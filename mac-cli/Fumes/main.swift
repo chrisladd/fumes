@@ -15,19 +15,19 @@ Fumes transpiles PaintCode's static objects into configurable views using layer 
 """)
     parser.arguments = CommandLine.arguments
 
-    parser.register(key: "input", shortKey: "i", description: "a path to get the .swift source code")
-    parser.register(key: "output", shortKey: "o", description: "a path to write the transpiled code")
-    parser.register(key: "bg", shortKey: nil, description: "a string to set the background UIColor for the view. `.clear` by default")
-    parser.register(key: "super", shortKey: "c", description: "an optional superclass for the resulting class. UIView by default.")
+    parser.register(key: "input", shortKey: "i", index: 0, description: "a path to get the .swift source code")
+    parser.register(key: "output", shortKey: "o", index: 1, description: "a path to write the transpiled code")
+    parser.register(key: "bg", description: "a string to set the background UIColor for the view. `.clear` by default")
+    parser.register(key: "super", description: "an optional superclass for the resulting class. UIView by default.")
     parser.register(key: "help", shortKey: "h", description: "show this help message")
     
-    if parser.boolForKey("help") {
+    if parser.bool(forKey: "help") {
         parser.printHelp()
         return nil;
     }
     
-    guard let input = parser.stringFor(key: "input", or:0) else { print("ERROR: No input specified."); return nil }
-    guard let output = parser.stringFor(key: "output", or:1) else { print("ERROR: No output specified."); return nil }
+    guard let input = parser.string(forKey: "input") else { print("ERROR: No input specified."); return nil }
+    guard let output = parser.string(forKey: "output") else { print("ERROR: No output specified."); return nil }
     
     guard input.contains(".swift") && output.contains(".swift") else { print("ERROR: Unsupported file type.\nIt looks like your input and outpuf files don't end in `.swift`\nIs there a chance you mistyped something?"); return nil }
     
@@ -39,11 +39,8 @@ Fumes transpiles PaintCode's static objects into configurable views using layer 
     let transpiler = PaintCodeTranspiler()
     var config = PaintCodeTranspilerConfig()
     
-    config.bg = parser.stringFor(key: "bg")
-    
-    if let superclass = parser.stringFor(key: "super") {
-        config.className = superclass;
-    }
+    config.bg = parser.string(forKey: "bg")
+    config.className = parser.string(forKey: "super") ?? "UIView"
     
     guard let updated = transpiler.transpile(source, config: config) else { print("ERROR: Unable to transpile source code"); return nil }
 
