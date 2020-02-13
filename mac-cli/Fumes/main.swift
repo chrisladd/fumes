@@ -17,12 +17,13 @@ Fumes transpiles PaintCode's static objects into configurable views using layer 
     parser.arguments = CommandLine.arguments
 
     parser.register(key: "input", shortKey: "i", index: 0, description: "a path to get the .swift source code")
-    parser.register(key: "output", shortKey: "o", index: 1, description: "a path to write the transpiled code")
+    parser.register(key: "output", shortKey: "o", index: 1, description: "a path to write the transpiled code. Alternatively, you may `--copy` to your clipboard")
+    parser.register(key: "copy", shortKey: "c", description: "copy source code to clipboard. Alternatively, you may provide an `--output` path to write to")
     parser.register(key: "bg", description: "a string to set the background UIColor for the view. `.clear` by default")
     parser.register(key: "super", description: "an optional superclass for the resulting class. UIView by default.")
     parser.register(key: "verbose", shortKey: "v", description: "whether to output transpiler warnings.")
     parser.register(key: "help", shortKey: "h", description: "show this help message")
-    parser.register(key: "copy", shortKey: "c", description: "copy source code to clipboard")
+    
     
     if parser.bool(forKey: "help") {
         parser.printHelp()

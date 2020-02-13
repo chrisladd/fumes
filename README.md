@@ -23,13 +23,15 @@ Specify source and target files:
 ## Options
 
 
-| Flag    |       | Description |
-|:----------|:--------|:-------|
-| `--input`	| `-i`   |	a path to get the .swift source code. You may also use the first argument.  |
-| `--output`| `-o`	 |  a path to write the transpiled code You may also use the second argument.  |
-| `--super`	|  `-c`  |	an optional superclass for the resulting class. UIView by default.  |
-| `--help`	|  `-h`  |	                |
-| `--bg`  |  | a string to set the background UIColor for the view. `.clear` by default |
+| Flag        |      | Description                                                                                                                 |
+|:------------|:-----|:----------------------------------------------------------------------------------------------------------------------------|
+| `--input`   | `-i` | a path to get the .swift source code. You may also use the first argument.                                                  |
+| `--output`  | `-o` | a path to write the transpiled code You may also use the second argument. Alternatively, you may `--copy` to your clipboard |
+| `--copy`    | `-c` | copy source code to clipboard. Alternatively, you may provide an `--output` path to write to                                |
+| `--bg`      |      | a string to set the background UIColor for the view. `.clear` by default                                                    |
+| `--super`   | `-c` | an optional superclass for the resulting class. UIView by default.                                                          |
+| `--verbose` | `-v` | whether to output transpiler warnings.                                                                                      |
+| `--help`    | `-h` |                                                                                                                             |
 
 
 ## Formatting Sketch Files
