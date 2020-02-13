@@ -20,7 +20,7 @@ Specify source and target files:
 
 `fumes ./path/to/SourceFile.swift ./path/to/DestinationFile.swift`
 
-or copy source code directly to your clipboard:
+or copy modified source code directly to your clipboard:
 
 `fumes ./path/to/SourceFile.swift -c`
 
