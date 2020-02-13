@@ -10,9 +10,9 @@ Fumes automatically parameterizes hard-coded elements like colors, using PaintCo
 
 ## Installation
 
-Download and build the project located at `mac-cli`--this will install the `fumes` executable to your `/usr/local/bin`.
+Can copy the `fumes` binary from `bin/fumes` to `/usr/local/bin`. 
 
-Alternatively, you can copy the `fumes` binary from `bin/fumes` to `/usr/local/bin`
+This file is updated with each build, so you may modify the source code, rebuild, and find the updated version waiting for you in `bin/fumes`
 
 ## Usage
 
@@ -20,8 +20,12 @@ Specify source and target files:
 
 `fumes ./path/to/SourceFile.swift ./path/to/DestinationFile.swift`
 
-## Options
+or copy source code directly to your clipboard:
 
+`fumes ./path/to/SourceFile.swift -c`
+
+
+## Options
 
 | Flag        |      | Description                                                                                                                 |
 |:------------|:-----|:----------------------------------------------------------------------------------------------------------------------------|

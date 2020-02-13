@@ -118,7 +118,6 @@
 			buildPhases = (
 				8EB3DA0B23EC84CA00CE4C36 /* Sources */,
 				8EB3DA0C23EC84CA00CE4C36 /* Frameworks */,
-				8E7D374F23F46459002039C4 /* Install to /usr/local/bin */,
 				8E7D375023F4653E002039C4 /* Copy to ../bin/fumes */,
 			);
 			buildRules = (
@@ -202,24 +201,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		8E7D374F23F46459002039C4 /* Install to /usr/local/bin */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Install to /usr/local/bin";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "cp ${BUILT_PRODUCTS_DIR}/${EXECUTABLE_NAME} /usr/local/bin/fumes\n";
-		};
 		8E7D375023F4653E002039C4 /* Copy to ../bin/fumes */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
