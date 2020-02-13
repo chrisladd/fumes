@@ -1,5 +1,7 @@
 # Fumes
 
+![Fumes logo](../assets/fumes-logo.png?raw=true)
+
 Fumes transpiles PaintCode's static objects into configurable views
 
 ## How it works
