@@ -28,4 +28,8 @@ extension Variable {
         
         return "public var"
     }
+    
+    func safeVariableName(with name: String) -> String {
+        return name.replacingOccurrences(of: " ", with: "")
+    }
 }

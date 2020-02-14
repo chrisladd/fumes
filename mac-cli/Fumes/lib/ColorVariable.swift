@@ -41,13 +41,13 @@ struct ColorVariable: Variable {
         let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
         
         if type == .text {
-            return firstWord + "TextColor"
+            return safeVariableName(with: firstWord) + "TextColor"
         }
         else if type == .stroke {
-            return firstWord + "StrokeColor"
+            return safeVariableName(with: firstWord) + "StrokeColor"
         }
         else {
-            return firstWord + "FillColor"
+            return safeVariableName(with: firstWord) + "FillColor"
         }
     }
 }

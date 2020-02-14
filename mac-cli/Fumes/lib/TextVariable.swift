@@ -33,6 +33,6 @@ struct TextVariable: Variable {
         let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
         let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
         
-        return firstWord + "Text"
+        return safeVariableName(with: firstWord) + "Text"
     }
 }

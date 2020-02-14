@@ -42,6 +42,6 @@ struct FontVariable: Variable {
         let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
         let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
         
-        return firstWord + "Font"
+        return safeVariableName(with: firstWord) + "Font"
     }
 }
