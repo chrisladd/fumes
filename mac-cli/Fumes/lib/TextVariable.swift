@@ -35,4 +35,11 @@ struct TextVariable: Variable {
         
         return safeVariableName(with: firstWord) + "Text"
     }
+    
+    func attributedVariableName() -> String {
+        let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
+        let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
+        
+        return safeVariableName(with: firstWord) + "AttributedText"
+    }
 }
