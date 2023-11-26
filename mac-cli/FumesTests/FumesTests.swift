@@ -84,6 +84,18 @@ class FumesTests: XCTestCase {
         XCTAssertFalse(result.contains("label2Font = UIFont(name: \"Helvetica\", size: 11)!"))
     }
     
+    func testOptionalAttributedStringVariablesAreCreated() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains("var label2AttributedText: NSAttributedString? = nil"))
+    }
+    
+    func testOptionalAttribuedStringVariablesAreUsed() {
+        let result = resultForFixture("CircleSquare.swift")!
+        // it should override contents with attributed text
+        XCTAssertTrue(result.contains("if let attributedText = label2AttributedText {"))
+        XCTAssertTrue(result.contains("label2.setAttributedString(attributedText"))
+    }
+    
     func testDrawingCodeIsCreated() {
         let result = resultForFixture("CircleSquare.swift")!
         

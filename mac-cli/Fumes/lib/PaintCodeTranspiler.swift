@@ -216,15 +216,31 @@ public struct PaintCodeTranspiler {
     func replaceTextVariables(_ source: String) -> (source: String, variables: [TextVariable]) {
         var stringVariables = [TextVariable]()
         var updatedLines = [String]()
+        var lastGroupName: String? = nil
         // NSMutableAttributedString(string:
         source.enumerateSubstrings(in: source.startIndex..<source.endIndex, options: [.byLines]) { (line, enclosingRange, range, _) in
             if var mutableLine = line {
+                // convert the initializer to use the variable name
                 if let stringValue = self.boundedValueFromString(mutableLine, left: "NSMutableAttributedString(string: \"", right: "\")") {
                     if let groupName = self.nameForGroupIn(source: source, before: range) {
                         let variable = TextVariable(groupName: groupName, text: stringValue)
                         stringVariables.append(variable)
+                        lastGroupName = groupName
                         
                         mutableLine = mutableLine.replacingOccurrences(of: "\"\(stringValue)\"", with: variable.variableName())
+                    }
+                }
+                else if let lastGroupName = lastGroupName {
+                    if mutableLine.contains("\(lastGroupName).draw(in: ") {
+                        // insert the attributed string override right before
+                        let insertable = """
+                                    // if explicit text for \(lastGroupName) was defined, use that
+                                    if let attributedText = \(lastGroupName)AttributedText {
+                                        \(lastGroupName).setAttributedString(attributedText)
+                                    }
+                        """
+
+                        updatedLines.append(insertable)
                     }
                 }
                 
@@ -288,6 +304,14 @@ public struct PaintCodeTranspiler {
                     let varLine = "    \(variable.variableKeyword()) \(variable.variableName()) = \(variable.variableValue())"
                     updatedVariableNames.append(variableName)
                     updatedLines.append(varLine)
+                    
+                    // TextVariable(visibility: FumesTests.Visibility._public, groupName: "label2", text: "circle")
+
+                    // is this a string? if so, add an attributed variable as well.
+                    if let textVariable = variable as? TextVariable {
+                        let varLine = "    \(textVariable.variableKeyword()) \(textVariable.attributedVariableName()): NSAttributedString? = nil"
+                        updatedLines.append(varLine)
+                    }
                 }
             }
         }
