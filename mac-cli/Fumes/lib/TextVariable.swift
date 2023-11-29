@@ -12,7 +12,8 @@ struct TextVariable: Variable {
     var visibility: Visibility
     let groupName: String
     let text: String
-
+    let typeName: String = "String"
+    
     func variableValue() -> String {
         return "\"" + text + "\""
     }
@@ -30,16 +31,10 @@ struct TextVariable: Variable {
     }
     
     func variableName() -> String {
-        let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
-        let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
-        
-        return safeVariableName(with: firstWord) + "Text"
+        return variableName(suffix: "Text")
     }
     
     func attributedVariableName() -> String {
-        let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
-        let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
-        
-        return safeVariableName(with: firstWord) + "AttributedText"
+        return variableName(suffix: "AttributedText")
     }
 }

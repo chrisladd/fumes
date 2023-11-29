@@ -13,6 +13,7 @@ struct FontVariable: Variable {
     var visibility: Visibility
     let groupName: String
     let text: String
+    let typeName: String = "UIFont"
 
     func fontSize() -> Double? {
         let comps = text.components(separatedBy: ", size: ")
@@ -39,9 +40,6 @@ struct FontVariable: Variable {
     }
     
     func variableName() -> String {
-        let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
-        let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
-        
-        return safeVariableName(with: firstWord) + "Font"
+        return variableName(suffix: "Font")
     }
 }

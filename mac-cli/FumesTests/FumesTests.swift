@@ -50,40 +50,72 @@ class FumesTests: XCTestCase {
     func testNamedColorsAreInserted() {
         let result = resultForFixture("CircleSquare.swift")!
 
-        XCTAssertTrue(result.contains("var dotFillColor = UIColor.white"))
-        XCTAssertTrue(result.contains("var dotStrokeColor = UIColor(hue: 0.068, saturation: 0.837, brightness: 0.769, alpha: 1)"))
+        XCTAssertTrue(result.contains("var dotFillColor: UIColor = UIColor.white"))
+        XCTAssertTrue(result.contains("var dotStrokeColor: UIColor = UIColor(hue: 0.068, saturation: 0.837, brightness: 0.769, alpha: 1)"))
     }
     
     func testTextColorIsExtracted() {
         let result = resultForFixture("CircleSquare.swift")!
 
-        XCTAssertTrue(result.contains("var label2TextColor = UIColor(hue: 0.45, saturation: 0.919, brightness: 0.835, alpha: 1)"))
+        XCTAssertTrue(result.contains("var label2TextColor: UIColor = UIColor(hue: 0.45, saturation: 0.919, brightness: 0.835, alpha: 1)"))
     }
     
     func testPrivateColorVariablesAreInserted() {
         let result = resultForFixture("CircleSquare.swift")!
-        XCTAssertTrue(result.contains("let triangleFillColor = UIColor(white: 0.73, alpha: 1)"))
+        XCTAssertTrue(result.contains("let triangleFillColor: UIColor = UIColor(white: 0.73, alpha: 1)"))
     }
     
     func testTextContents() {
         let result = resultForFixture("CircleSquare.swift")!
-        XCTAssertTrue(result.contains("var label2Text = \"circle\""))
+        XCTAssertTrue(result.contains("var label2Text: String = \"circle\""))
     }
     
     func testFontsAreExtracted() {
         let result = resultForFixture("CircleSquare.swift")!
         
-        XCTAssertTrue(result.contains("var label2Font = UIFont(name: \"Helvetica\", size: 11)"))
+        XCTAssertTrue(result.contains("var label2Font: UIFont = UIFont(name: \"Helvetica\", size: 11)"))
         XCTAssertFalse(result.contains("label2.addAttribute(.font, value: UIFont(name: \"Helvetica\", size: 11)!"))
     }
     
     func testFontsAreNilCoalescedNotForceUnwrapped() {
         let result = resultForFixture("CircleSquare.swift")!
         
-        XCTAssertTrue(result.contains("var label2Font = UIFont(name: \"Helvetica\", size: 11) ?? UIFont.systemFont(ofSize: 11.0)"))
+        XCTAssertTrue(result.contains("var label2Font: UIFont = UIFont(name: \"Helvetica\", size: 11) ?? UIFont.systemFont(ofSize: 11.0)"))
         XCTAssertFalse(result.contains("label2Font = UIFont(name: \"Helvetica\", size: 11)!"))
     }
     
+    func testHotspotFramesAreCreatedForTextPaths() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains("var label2Frame: CGRect = .zero"))
+    }
+    
+    func testHotspotFramesAreAssignedForTextPaths_1_public() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains(" label2Frame = convertRectToViewSpace(CGRect(x: 68.97, y: 5, width: 45, height: 15), context: context)"))
+    }
+    
+    func testHotspotFramesAreAssignedForTextPaths_2_private() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains(" label1Frame = convertRectToViewSpace(CGRect(x: 5.85, y: 5, width: 40.4, height: 15), context: context)"))
+    }
+    
+    func testHotspotFramesAreCreatedForBezierPaths() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains("var dotFrame: CGRect = .zero"))
+    }
+    
+    func testConvertRectToViewSpaceMethodExists() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains("func convertRectToViewSpace"))
+    }
+    
+    func testHotspotFramesAreAssignedForBezierPaths() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains("dotFrame = convertRectToViewSpace(dot.bounds, context: context)"))
+        XCTAssertTrue(result.contains("rectangleFrame = convertRectToViewSpace(rectangle.bounds, context: context)"))
+        XCTAssertTrue(result.contains("triangleFrame = convertRectToViewSpace(_triangle.bounds, context: context)"))
+    }
+
     func testOptionalAttributedStringVariablesAreCreated() {
         let result = resultForFixture("CircleSquare.swift")!
         XCTAssertTrue(result.contains("var label2AttributedText: NSAttributedString? = nil"))
@@ -94,6 +126,13 @@ class FumesTests: XCTestCase {
         // it should override contents with attributed text
         XCTAssertTrue(result.contains("if let attributedText = label2AttributedText {"))
         XCTAssertTrue(result.contains("label2.setAttributedString(attributedText"))
+    }
+    
+    func testOptionalAttribuedStringVariablesAreUsed_private() {
+        let result = resultForFixture("CircleSquare.swift")!
+        // it should override contents with attributed text
+        XCTAssertTrue(result.contains("if let attributedText = label1AttributedText {"))
+        XCTAssertTrue(result.contains("_label1.setAttributedString(attributedText"))
     }
     
     func testDrawingCodeIsCreated() {

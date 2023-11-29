@@ -14,7 +14,8 @@ enum Visibility {
 
 protocol Variable {
     var visibility: Visibility { get set }
-    
+    var groupName: String { get }
+    var typeName: String { get }
     func variableName() -> String
     func variableKeyword() -> String
     func variableValue() -> String
@@ -27,6 +28,19 @@ extension Variable {
         }
         
         return "public var"
+    }
+    
+    func variableName(suffix: String, typeName: String? = nil) -> String {
+        let trimmed = groupName.trimmingCharacters(in: CharacterSet(charactersIn: "_"))
+        let firstWord = trimmed.prefix(1).lowercased() + trimmed.dropFirst()
+        
+        var result = safeVariableName(with: firstWord) + suffix
+        
+        if let typeName = typeName {
+            result += ": \(typeName)"
+        }
+        
+        return result
     }
     
     func safeVariableName(with name: String) -> String {

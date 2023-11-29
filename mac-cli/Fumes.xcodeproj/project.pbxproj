@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8E1EA2562B1779E7008569BA /* FrameVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1EA2552B1779E7008569BA /* FrameVariable.swift */; };
 		8E71460223F35134000C413A /* DashDashSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8E71460123F35134000C413A /* DashDashSwift */; };
 		8EB3DA1323EC84CA00CE4C36 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA1223EC84CA00CE4C36 /* main.swift */; };
 		8EB3DA2423EC859100CE4C36 /* FumesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA2323EC859100CE4C36 /* FumesTests.swift */; };
@@ -23,9 +24,11 @@
 		8EB3DA3F23ECB22A00CE4C36 /* FontVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA3D23ECB22900CE4C36 /* FontVariable.swift */; };
 		8EB3DA4423ECC3A200CE4C36 /* PaintCodeTranspilerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA4323ECC3A200CE4C36 /* PaintCodeTranspilerConfig.swift */; };
 		8EB3DA4523ECC3A200CE4C36 /* PaintCodeTranspilerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EB3DA4323ECC3A200CE4C36 /* PaintCodeTranspilerConfig.swift */; };
+		8EB83E952B177F4F004050A5 /* FrameVariable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1EA2552B1779E7008569BA /* FrameVariable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8E1EA2552B1779E7008569BA /* FrameVariable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrameVariable.swift; sourceTree = "<group>"; };
 		8EB3DA0F23EC84CA00CE4C36 /* fumes */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = fumes; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EB3DA1223EC84CA00CE4C36 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		8EB3DA2123EC859100CE4C36 /* FumesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FumesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -103,6 +106,7 @@
 				8EB3DA4323ECC3A200CE4C36 /* PaintCodeTranspilerConfig.swift */,
 				8EB3DA3123ECAFA700CE4C36 /* Variable.swift */,
 				8EB3DA3423ECAFDB00CE4C36 /* ColorVariable.swift */,
+				8E1EA2552B1779E7008569BA /* FrameVariable.swift */,
 				8EB3DA3A23ECB08A00CE4C36 /* TextVariable.swift */,
 				8EB3DA3D23ECB22900CE4C36 /* FontVariable.swift */,
 			);
@@ -234,6 +238,7 @@
 				8EB3DA3523ECAFDB00CE4C36 /* ColorVariable.swift in Sources */,
 				8EB3DA3E23ECB22900CE4C36 /* FontVariable.swift in Sources */,
 				8EB3DA3B23ECB08A00CE4C36 /* TextVariable.swift in Sources */,
+				8E1EA2562B1779E7008569BA /* FrameVariable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +253,7 @@
 				8EB3DA3623ECAFDD00CE4C36 /* ColorVariable.swift in Sources */,
 				8EB3DA3F23ECB22A00CE4C36 /* FontVariable.swift in Sources */,
 				8EB3DA3C23ECB1EA00CE4C36 /* TextVariable.swift in Sources */,
+				8EB83E952B177F4F004050A5 /* FrameVariable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
