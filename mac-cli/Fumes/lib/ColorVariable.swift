@@ -18,6 +18,7 @@ struct ColorVariable: Variable {
     let groupName: String
     let color: String
     let type: ColorType
+    let typeName: String = "UIColor"
     
     init(groupName: String, color: String, type: ColorType) {
         self.groupName = groupName

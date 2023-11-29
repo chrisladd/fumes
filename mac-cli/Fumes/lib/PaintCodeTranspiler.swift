@@ -34,6 +34,20 @@ public struct PaintCodeTranspiler {
         let colorResult = replaceColorVariables(source)
         var usedVariableNames = [String]()
         (source, usedVariableNames) = insertVariables(source: colorResult.source, variables: colorResult.color, existing: usedVariableNames, config: config)
+
+        // get bezier path variables via fill color variables
+        var frameVariables = [FrameVariable]()
+        for color in colorResult.color {
+            guard color.type == .fill else { continue }
+            frameVariables.append(FrameVariable(visibility: color.visibility,
+                                                 groupName: color.groupName,
+                                                 type: .bezierPath))
+        }
+        
+        // insert bezier path frame variable assignment
+        source = insertBezierPathFrameAssignments(variables: frameVariables, source: source)
+        
+        (source, usedVariableNames) = insertVariables(source: source, variables: frameVariables, existing: usedVariableNames, config: config)
         
         let textResult = replaceTextVariables(source)
         (source, usedVariableNames) = insertVariables(source: textResult.source, variables: textResult.variables, existing: usedVariableNames, config: config)
@@ -44,6 +58,26 @@ public struct PaintCodeTranspiler {
         source = insertDrawRectIn(source: source)
         
         return source
+    }
+    
+    func insertBezierPathFrameAssignments(variables: [FrameVariable], source: String) -> String {
+        var updatedLines = [String]()
+        
+        source.enumerateLines { (line, stop) in
+            updatedLines.append(line)
+            
+            for variable in variables {
+                // find a matching fill call for the groupName
+                // note the space here
+                if line.contains(" \(variable.groupVariableName).fill()") {
+                    let assignment = "        \(variable.variableName()) = convertRectToViewSpace(\(variable.groupVariableName).bounds, context: context)"
+                    updatedLines.append(assignment)
+                    break
+                }
+            }
+        }
+        
+        return updatedLines.joined(separator: "\n")
     }
     
     
@@ -116,7 +150,11 @@ public struct PaintCodeTranspiler {
         super.draw(rect)
         draw\(functionName)(frame: rect)
     }
-    
+
+    func convertRectToViewSpace(_ rect: CGRect, context: CGContext) -> CGRect {
+        return context.convertToDeviceSpace(rect).applying(CGAffineTransformMakeScale(1 / UIScreen.main.scale, 1 / UIScreen.main.scale))
+    }
+
     override func sizeThatFits(_ size: CGSize) -> CGSize {
         // scale the size to the given width
          let nativeRect = \(rectValue)
@@ -301,16 +339,20 @@ public struct PaintCodeTranspiler {
                         continue
                     }
                     
-                    let varLine = "    \(variable.variableKeyword()) \(variable.variableName()) = \(variable.variableValue())"
+                    let varLine = "    \(variable.variableKeyword()) \(variable.variableName()): \(variable.typeName) = \(variable.variableValue())"
                     updatedVariableNames.append(variableName)
                     updatedLines.append(varLine)
-                    
+
                     // TextVariable(visibility: FumesTests.Visibility._public, groupName: "label2", text: "circle")
 
                     // is this a string? if so, add an attributed variable as well.
                     if let textVariable = variable as? TextVariable {
                         let varLine = "    \(textVariable.variableKeyword()) \(textVariable.attributedVariableName()): NSAttributedString? = nil"
                         updatedLines.append(varLine)
+                        
+                        // and add a frame value
+                        let frameLine = "    \(textVariable.variableKeyword()) \(textVariable.variableName(suffix: "Frame")): CGRect = .zero"
+                        updatedLines.append(frameLine)
                     }
                 }
             }
