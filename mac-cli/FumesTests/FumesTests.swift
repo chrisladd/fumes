@@ -89,16 +89,18 @@ class FumesTests: XCTestCase {
         XCTAssertTrue(result.contains("var label2Frame: CGRect = .zero"))
     }
     
-    func testHotspotFramesAreAssignedForTextPaths() {
+    func testHotspotFramesAreAssignedForTextPaths_1_public() {
         let result = resultForFixture("CircleSquare.swift")!
-        XCTFail()
+        XCTAssertTrue(result.contains(" label2Frame = convertRectToViewSpace(CGRect(x: 68.97, y: 5, width: 45, height: 15), context: context)"))
+    }
+    
+    func testHotspotFramesAreAssignedForTextPaths_2_private() {
+        let result = resultForFixture("CircleSquare.swift")!
+        XCTAssertTrue(result.contains(" label1Frame = convertRectToViewSpace(CGRect(x: 5.85, y: 5, width: 40.4, height: 15), context: context)"))
     }
     
     func testHotspotFramesAreCreatedForBezierPaths() {
         let result = resultForFixture("CircleSquare.swift")!
-        
-        print(result)
-        
         XCTAssertTrue(result.contains("var dotFrame: CGRect = .zero"))
     }
     
@@ -124,6 +126,13 @@ class FumesTests: XCTestCase {
         // it should override contents with attributed text
         XCTAssertTrue(result.contains("if let attributedText = label2AttributedText {"))
         XCTAssertTrue(result.contains("label2.setAttributedString(attributedText"))
+    }
+    
+    func testOptionalAttribuedStringVariablesAreUsed_private() {
+        let result = resultForFixture("CircleSquare.swift")!
+        // it should override contents with attributed text
+        XCTAssertTrue(result.contains("if let attributedText = label1AttributedText {"))
+        XCTAssertTrue(result.contains("_label1.setAttributedString(attributedText"))
     }
     
     func testDrawingCodeIsCreated() {

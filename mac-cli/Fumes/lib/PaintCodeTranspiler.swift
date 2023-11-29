@@ -31,10 +31,14 @@ public struct PaintCodeTranspiler {
         
         source = insertInitializersIn(source: source, bgColor: config.bg)
         
+        // MARK: Colors
+        
         let colorResult = replaceColorVariables(source)
         var usedVariableNames = [String]()
         (source, usedVariableNames) = insertVariables(source: colorResult.source, variables: colorResult.color, existing: usedVariableNames, config: config)
 
+        // MARK: Bezier Paths
+        
         // get bezier path variables via fill color variables
         var frameVariables = [FrameVariable]()
         for color in colorResult.color {
@@ -46,8 +50,9 @@ public struct PaintCodeTranspiler {
         
         // insert bezier path frame variable assignment
         source = insertBezierPathFrameAssignments(variables: frameVariables, source: source)
-        
         (source, usedVariableNames) = insertVariables(source: source, variables: frameVariables, existing: usedVariableNames, config: config)
+
+        // MARK: Text
         
         let textResult = replaceTextVariables(source)
         (source, usedVariableNames) = insertVariables(source: textResult.source, variables: textResult.variables, existing: usedVariableNames, config: config)
@@ -255,6 +260,7 @@ public struct PaintCodeTranspiler {
         var stringVariables = [TextVariable]()
         var updatedLines = [String]()
         var lastGroupName: String? = nil
+        var lastVariable: TextVariable? = nil
         // NSMutableAttributedString(string:
         source.enumerateSubstrings(in: source.startIndex..<source.endIndex, options: [.byLines]) { (line, enclosingRange, range, _) in
             if var mutableLine = line {
@@ -264,21 +270,31 @@ public struct PaintCodeTranspiler {
                         let variable = TextVariable(groupName: groupName, text: stringValue)
                         stringVariables.append(variable)
                         lastGroupName = groupName
-                        
+                        lastVariable = variable
                         mutableLine = mutableLine.replacingOccurrences(of: "\"\(stringValue)\"", with: variable.variableName())
                     }
                 }
-                else if let lastGroupName = lastGroupName {
+                else if let lastGroupName = lastGroupName, let lastVariable = lastVariable {
+                    // FIND the line where our target group is being drawn
                     if mutableLine.contains("\(lastGroupName).draw(in: ") {
-                        // insert the attributed string override right before
-                        let insertable = """
+
+                        // EXTRACT the CGRect where it is being drawn
+                        // and assign the translated version to our frame variable
+                        
+                        if let labelRect = extractCGRectFrom(line: mutableLine) {
+                            let frameLine = "        \(lastVariable.variableName(suffix: "Frame")) = convertRectToViewSpace(\(labelRect), context: context)"
+                            updatedLines.append(frameLine)
+                        }
+                        
+                        // insert attributed string drawing override right before
+                        let attributedStringDrawing = """
                                     // if explicit text for \(lastGroupName) was defined, use that
-                                    if let attributedText = \(lastGroupName)AttributedText {
+                                    if let attributedText = \(lastVariable.variableName(suffix: "AttributedText")) {
                                         \(lastGroupName).setAttributedString(attributedText)
                                     }
                         """
 
-                        updatedLines.append(insertable)
+                        updatedLines.append(attributedStringDrawing)
                     }
                 }
                 
@@ -287,6 +303,16 @@ public struct PaintCodeTranspiler {
         }
         
         return (updatedLines.joined(separator: "\n"), stringVariables)
+    }
+    
+    func extractCGRectFrom(line: String) -> String? {
+        // label2.draw(in: CGRect(x: 68.97, y: 5, width: 45, height: 15))
+        if let startRange = line.range(of: "CGRect(x:"), let endRange = line.range(of: "))") {
+            let substring = line[startRange.lowerBound..<endRange.lowerBound]
+            return "\(substring))"
+        }
+        
+        return nil
     }
     
     // MARK: Fonts
